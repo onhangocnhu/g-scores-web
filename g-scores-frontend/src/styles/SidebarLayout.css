@@ -1,0 +1,15 @@
+.class-sidebar {
+  width: 240px;
+  padding: 16px;
+  background: linear-gradient(to bottom, #f2d307, #93aa4b, #418785);
+}
+
+.menu-title {
+  text-align: center;
+}
+
+.class-sidebar ul {
+  text-align: left;
+  list-style: none;
+  margin: 0;
+}

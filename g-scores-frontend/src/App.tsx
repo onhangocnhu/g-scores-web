@@ -1,11 +1,12 @@
 // import { useState } from 'react'
 import './App.css'
-import Header from './layouts/HeaderLayout.tsx'
+
+import MainLayout from './layouts/MainLayout.tsx'
 
 function App() {
   return (
     <>
-      <Header></Header>
+      <MainLayout />
     </>
   )
 }

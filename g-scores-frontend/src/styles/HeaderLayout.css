@@ -1,0 +1,14 @@
+.header-title {
+  margin: 0;
+  text-align: center;
+  size: 75%;
+
+  color: white;
+  background-color: rgba(15, 34, 137);
+
+  height: 56px;
+  align-items: center;
+  width: 100vw;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}

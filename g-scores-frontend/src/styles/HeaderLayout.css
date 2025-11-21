@@ -1,14 +1,53 @@
+.header-container {
+  position: relative;
+  margin: 0;
+  background-color: rgba(15, 34, 137);
+  font-weight: 700;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding-top: 36px;
+  padding-bottom: 36px;
+  width: 100vw;
+  height: 56px;
+}
+
+/* 
+.header-logo {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+} */
+.header-left {
+  position: absolute;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* khoảng cách logo ↔ menu */
+}
+
+/* Logo */
+.header-logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white !important;
+  width: 32px;
+  height: 32px;
+}
+
 .header-title {
   margin: 0;
-  text-align: center;
-  size: 75%;
-
+  font-size: xx-large;
   color: white;
-  background-color: rgba(15, 34, 137);
-
-  height: 56px;
-  align-items: center;
-  width: 100vw;
-  padding-top: 16px;
-  padding-bottom: 16px;
 }

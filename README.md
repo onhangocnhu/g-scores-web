@@ -1,5 +1,10 @@
 # g-scores-web
+---
+- Frontend deployment: https://g-scores-web-yubj.vercel.app/
+- Backend deployment: https://gscores-latest.onrender.com/
+(need to include API routes)
 
+---
 This project includes:
 
 - **Frontend:** React + Tailwind + Vite  
@@ -130,4 +135,5 @@ The frontend will run at: http://localhost:5173
 
 ### Notes
 - UI uses TailwindCSS for some external components.
+
 - Some pages use custom CSS where Tailwind alone isn't enough.

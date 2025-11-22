@@ -99,7 +99,7 @@ export default function ReportChart() {
       setError(null);
 
       try {
-        const response = await fetch(`http://localhost:3000/student/report/${groupName}`);
+        const response = await fetch(`https://gscores-latest.onrender.com/student/report/${groupName}`);
         if (!response.ok) throw new Error("Error fetching report");
 
         const result: ScoreReportDto[] = await response.json();
@@ -135,7 +135,7 @@ export default function ReportChart() {
                 justifyContent: "center",
                 fontSize: "20px",
                 fontWeight: "600",
-                zIndex: 10, 
+                zIndex: 10,
                 backdropFilter: "blur(2px)",
               }}
             >

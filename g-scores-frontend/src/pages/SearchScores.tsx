@@ -27,7 +27,7 @@ export default function SearchScores() {
     setData(null);
 
     try {
-      const response = await fetch(`http://localhost:3000/student/search-scores/${sbd}`);
+      const response = await fetch(`https://gscores-latest.onrender.com/student/search-scores/${sbd}`);
 
       if (!response.ok) {
         throw new Error('ID not found!');

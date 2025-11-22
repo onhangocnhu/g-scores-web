@@ -1,0 +1,81 @@
+/* src/components/ReportChart.css */
+
+.report-container {
+  align-items: center;
+  width: 100vw;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.report-container h2 {
+  text-align: center;
+  color: #007bff;
+  margin-bottom: 30px;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.report-placeholder {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+}
+
+.loading-text,
+.error-text {
+  text-align: center;
+  font-style: italic;
+  padding: 20px;
+}
+
+/* Style cho bảng tóm tắt */
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.report-table th,
+.report-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.report-table th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+
+/* Màu sắc cột điểm */
+.report-table td.excellent {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.report-table td.good {
+  color: #ffc107;
+  font-weight: 600;
+}
+
+.report-table td.average {
+  color: #007bff;
+  font-weight: 600;
+}
+
+.report-table td.poor {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.chart-placeholder {
+  padding: 20px 0;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  text-align: center;
+}

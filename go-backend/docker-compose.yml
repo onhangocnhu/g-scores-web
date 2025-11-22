@@ -1,0 +1,14 @@
+services:
+  api:
+    build:
+      context: .
+      target: ${BUILD_TARGET:-dev}
+    container_name: g-scores-api
+    env_file: .env
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      - MONGO_URI=${MONGO_URI}
+    volumes:
+      - .:/app
+      - /app/node_modules

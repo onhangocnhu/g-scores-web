@@ -26,6 +26,7 @@
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/mongoose": "^11.0.3",
+    "@nestjs/platform-express": "^11.1.9",
     "@prisma/client": "^6.19.0",
     "ci": "^2.3.0",
     "class-transformer": "^0.5.1",

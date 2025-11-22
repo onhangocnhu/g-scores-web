@@ -1,12 +1,11 @@
-import MainContent from './MainContent.tsx'
-import "../styles/MainLayout.css"
+import Header from "../components/layout/HeaderLayout";
+import MainContent from "./MainContent";
 
-function MainLayout() {
+export default function MainLayout() {
   return (
-    <main className="main-content">
+    <div className="main-layout">
+      <Header />
       <MainContent />
-    </main>
-  )
+    </div>
+  );
 }
-
-export default MainLayout

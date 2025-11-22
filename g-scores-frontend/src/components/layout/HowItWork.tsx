@@ -1,5 +1,3 @@
-
-
 import React from "react";
 import type { ReactNode } from "react";
 import { FileText, Cog, Bolt } from "lucide-react";

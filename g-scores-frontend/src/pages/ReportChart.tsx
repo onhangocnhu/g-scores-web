@@ -123,7 +123,6 @@ export default function ReportChart() {
           <SelectGroupSubject groupName={groupName} setGroupName={setGroupName} />
         </div>
 
-        {/* ----- CHART WRAPPER WITH OVERLAY ----- */}
         <div style={{ position: "relative", minHeight: "350px" }}>
           {loading && (
             <div

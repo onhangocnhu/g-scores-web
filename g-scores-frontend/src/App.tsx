@@ -1,42 +1,36 @@
-// import { useState } from 'react'
 import './App.css'
-import Header from './layouts/HeaderLayout.tsx'
-import MainLayout from './layouts/MainLayout.tsx'
-import { SidebarProvider, SidebarTrigger, SidebarInset } from "./components/ui/sidebar"
-import { AppSidebar } from "./components/app-sidebar"
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-function App({ children }: { children: React.ReactNode }) {
+import SearchScores from './pages/SearchScores.tsx';
+import Dashboard from './pages/Dashboard.tsx';
+import MainLayout from './layouts/MainLayout.tsx';
+import ReportChart from './pages/ReportChart.tsx';
+import TopRanking from './pages/Ranking.tsx';
+import Footer1 from './components/common/Footer1.tsx';
+
+function App() {
   return (
-    <>
-      <SidebarProvider>
-        <div className="root-container">
-          <AppSidebar />
+    <BrowserRouter>
+      <div className="root-container">
+        <MainLayout />
 
-          <SidebarInset>
-            <Header />
-
-            <MainLayout />
-          </SidebarInset>
-          <main>
-            {children}
-          </main>
-        </div >
-      </SidebarProvider>
-    </>
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/search-scores" element={<SearchScores />} />
+          <Route path="/reports" element={<ReportChart />} />
+          <Route path="/ranking" element={<TopRanking />} />
+          <Route path="*" element={<div>Not found</div>} />
+        </Routes>
+        <Footer1
+          website='gscores.vn'
+          websiteDescription='An exclusive platform for exam scores'
+          handle='nhu'
+          classname='bg-primary text-white'
+        />
+      </div >
+    </BrowserRouter>
   )
 }
-// function App() {
-//   return (
-//     <>
-//       <div className="root-container">
-//         <Header />
-//         <div className="layout-container">
-//           <Sidebar />
-//         </div>
-//         <MainLayout />
-//       </div>
-//     </>
-//   )
-// }
 
 export default App

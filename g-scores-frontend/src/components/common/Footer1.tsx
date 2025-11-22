@@ -1,4 +1,3 @@
-import { Heart } from "lucide-react";
 import { Separator } from "../ui/separator";
 import {
   FaInstagram,
@@ -54,7 +53,6 @@ export default function Footer1({
   sectionId = "",
   website = "domain.com",
   websiteDescription = " This is a description of the website",
-  handle = "@username",
   classname,
   footerNavigation = DEFAULT_FOOTER_NAVIGATION,
   socialLinks = DEFAULT_SOCIAL_LINKS,

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SearchScoreResponseDto } from './dto/search-scores-public.dto';
 import { ScoreReportDto, TopStudentDto } from './dto/report.dto';
+import { CountScoreDto } from './dto/count-score.dto';
 
 @Injectable()
 export class StudentService {
@@ -39,25 +40,24 @@ export class StudentService {
     };
   }
 
-  async getScoreReport(groupName?: string): Promise<ScoreReportDto[]> {
-    let whereSubjectCondition: any = {};
+  async getScoreReport(groupName: string): Promise<ScoreReportDto[]> {
+    const group = await this.prisma.group.findUnique({
+      where: { name: groupName },
+      select: { id: true }
+    });
 
-    if (groupName) {
-      const group = await this.prisma.group.findUnique({
-        where: { name: groupName },
-        select: { id: true }
-      });
-
-      if (!group) return [];
-      whereSubjectCondition = { groupId: group.id };
+    if (!group) {
+      throw new NotFoundException()
     }
 
     const subjects = await this.prisma.subject.findMany({
-      where: whereSubjectCondition,
+      where: { groupId: group.id },
       select: { id: true, name: true }
     });
 
-    if (subjects.length === 0) return [];
+    if (subjects.length === 0) {
+      throw new NotFoundException()
+    }
 
     const reportPromises = subjects.map(async (subject) => {
 
@@ -79,7 +79,7 @@ export class StudentService {
         ]
       });
 
-      const excellent = (excellentResult as any)[0]?.count ?? 0;
+      const excellent = (excellentResult as unknown as CountScoreDto)[0]?.count ?? 0;
 
       const goodResult = await this.prisma.student.aggregateRaw({
         pipeline: [
@@ -96,7 +96,7 @@ export class StudentService {
           { $count: "count" }
         ]
       });
-      const good = (goodResult as any)[0]?.count ?? 0;
+      const good = (goodResult as unknown as CountScoreDto)[0]?.count ?? 0;
 
       const averageResult = await this.prisma.student.aggregateRaw({
         pipeline: [
@@ -113,7 +113,7 @@ export class StudentService {
           { $count: "count" }
         ]
       });
-      const average = (averageResult as any)[0]?.count ?? 0;
+      const average = (averageResult as unknown as CountScoreDto)[0]?.count ?? 0;
 
       const poorResult = await this.prisma.student.aggregateRaw({
         pipeline: [
@@ -130,7 +130,7 @@ export class StudentService {
           { $count: "count" }
         ]
       });
-      const poor = (poorResult as any)[0]?.count ?? 0;
+      const poor = (poorResult as unknown as CountScoreDto)[0]?.count ?? 0;
 
       return {
         subject: subject.name,
@@ -145,82 +145,72 @@ export class StudentService {
   }
 
   async getTop10GroupA(): Promise<TopStudentDto[]> {
-    const subjects = await this.prisma.subject.findMany({
-      where: { code: { in: ['toan', 'vat_li', 'hoa_hoc'] } }
-    });
+    const [math, physics, chemistry] = await Promise.all([
+      this.prisma.subject.findUnique({
+        where: { code: "toan" },
+        select: { id: true }
+      }),
+      this.prisma.subject.findUnique({
+        where: { code: "vat_li" },
+        select: { id: true }
+      }),
+      this.prisma.subject.findUnique({
+        where: { code: "hoa_hoc" },
+        select: { id: true }
+      })
+    ]);
 
-    const mathId = subjects.find(s => s.code === 'toan')?.id;
-    const physId = subjects.find(s => s.code === 'vat_li')?.id;
-    const chemId = subjects.find(s => s.code === 'hoa_hoc')?.id;
-
-    if (!mathId || !physId || !chemId) return [];
+    if (!math || !physics || !chemistry) {
+      throw new NotFoundException();
+    }
 
     const result = await this.prisma.student.aggregateRaw({
       pipeline: [
         {
           $match: {
-            scores: {
-              $all: [
-                { $elemMatch: { subjectId: mathId } },
-                { $elemMatch: { subjectId: physId } },
-                { $elemMatch: { subjectId: chemId } }
-              ]
-            }
+            "scores.subjectId": { $all: [math.id, physics.id, chemistry.id] }
           }
         },
-
         {
           $project: {
             _id: 0,
             candidateId: 1,
             math: {
               $first: {
-                $map: {
-                  input: {
-                    $filter: {
-                      input: "$scores",
-                      as: "s",
-                      cond: { $eq: ["$$s.subjectId", mathId] }
-                    }
-                  },
-                  as: "x",
-                  in: "$$x.score"
+                $filter: {
+                  input: "$scores",
+                  as: "s",
+                  cond: { $eq: ["$$s.subjectId", math.id] }
                 }
               }
             },
             physics: {
               $first: {
-                $map: {
-                  input: {
-                    $filter: {
-                      input: "$scores",
-                      as: "s",
-                      cond: { $eq: ["$$s.subjectId", physId] }
-                    }
-                  },
-                  as: "x",
-                  in: "$$x.score"
+                $filter: {
+                  input: "$scores",
+                  as: "s",
+                  cond: { $eq: ["$$s.subjectId", physics.id] }
                 }
               }
             },
             chemistry: {
               $first: {
-                $map: {
-                  input: {
-                    $filter: {
-                      input: "$scores",
-                      as: "s",
-                      cond: { $eq: ["$$s.subjectId", chemId] }
-                    }
-                  },
-                  as: "x",
-                  in: "$$x.score"
+                $filter: {
+                  input: "$scores",
+                  as: "s",
+                  cond: { $eq: ["$$s.subjectId", chemistry.id] }
                 }
               }
             }
           }
         },
-
+        {
+          $addFields: {
+            math: "$math.score",
+            physics: "$physics.score",
+            chemistry: "$chemistry.score"
+          }
+        },
         {
           $addFields: {
             totalScore: {
@@ -231,22 +221,11 @@ export class StudentService {
             }
           }
         },
-
         { $sort: { totalScore: -1 } },
-
         { $limit: 10 }
       ]
-    });
+    }) as unknown as TopStudentDto[]
 
-    const cleaned = (result as any).map((r) => ({
-      candidateId: r.candidateId,
-      math: r.math,
-      physics: r.physics,
-      chemistry: r.chemistry,
-      totalScore: r.totalScore,
-    }));
-
-    return cleaned as TopStudentDto[];
+    return result
   }
-
 }
